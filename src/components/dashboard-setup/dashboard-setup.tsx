@@ -12,7 +12,7 @@ import {
 import EmojiPicker from "../global/emoji-picker";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { Subscription, workspace } from "@/src/lib/supabase/supabase.types";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { v4 } from "uuid";
@@ -22,6 +22,8 @@ import { useToast } from "../ui/use-toast";
 import { createWorkspace } from "../../lib/supabase/queries";
 import { useRouter } from "next/navigation";
 import { useAppState } from "@/src/lib/providers/state-provider";
+import { Button } from "../ui/button";
+import Loader from "../global/Loader";
 
 interface DashboardSetupProps {
   user: AuthUser;
@@ -29,10 +31,14 @@ interface DashboardSetupProps {
 }
 
 const DashboardSetup: React.FC<DashboardSetupProps> = ({
-  user,
   subscription,
+  user,
 }) => {
-  const [selectedEmoji, setSelectedEmoji] = useState<any>("💼");
+  const { toast } = useToast();
+  const router = useRouter();
+  const { dispatch } = useAppState();
+  const [selectedEmoji, setSelectedEmoji] = useState("💼");
+  const supabase = createClientComponentClient();
   const {
     register,
     handleSubmit,
@@ -45,10 +51,6 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
       workspaceName: "",
     },
   });
-  const supabase = createClientComponentClient();
-  const { toast } = useToast();
-  const router = useRouter();
-  const { dispatch } = useAppState();
 
   const onSubmit: SubmitHandler<
     z.infer<typeof CreateWorkspaceFormSchema>
@@ -88,7 +90,7 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
         logo: filePath || null,
         bannerUrl: "",
       };
-      let { data, error: createError } = await createWorkspace(newWorkspace);
+      const { data, error: createError } = await createWorkspace(newWorkspace);
       if (createError) {
         throw new Error();
       }
@@ -119,8 +121,9 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
   return (
     <Card
       className="h-screen
-  w-[800px]
-  sm:h-auto"
+      w-[800px]
+      sm:h-auto
+  "
     >
       <CardHeader>
         <CardTitle>Create A Workspace</CardTitle>
@@ -130,23 +133,24 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={() => {}}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-4">
+            <div
+              className="flex
+            items-center
+            gap-4"
+            >
               <div className="text-5xl">
-                <EmojiPicker
-                  getValue={(emoji) => {
-                    setSelectedEmoji(emoji);
-                  }}
-                >
+                <EmojiPicker getValue={(emoji) => setSelectedEmoji(emoji)}>
                   {selectedEmoji}
                 </EmojiPicker>
               </div>
-              <div className="w-full">
+              <div className="w-full ">
                 <Label
                   htmlFor="workspaceName"
                   className="text-sm
-                text-muted-foreground"
+                  text-muted-foreground
+                "
                 >
                   Name
                 </Label>
@@ -168,7 +172,8 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
               <Label
                 htmlFor="logo"
                 className="text-sm
-                text-muted-foreground"
+                  text-muted-foreground
+                "
               >
                 Workspace Logo
               </Label>
@@ -177,14 +182,29 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
                 type="file"
                 accept="image/*"
                 placeholder="Workspace Name"
-                disabled={isLoading || subscription?.status !== "active"}
-                {...register("workspaceName", {
-                  required: "Workspace name is required",
+                // disabled={isLoading || subscription?.status !== 'active'}
+                {...register("logo", {
+                  required: false,
                 })}
               />
               <small className="text-red-600">
                 {errors?.logo?.message?.toString()}
               </small>
+              {subscription?.status !== "active" && (
+                <small
+                  className="
+                  block
+                  text-muted-foreground
+              "
+                >
+                  To customize your workspace, you need to be on a Pro Plan
+                </small>
+              )}
+            </div>
+            <div className="self-end">
+              <Button disabled={isLoading} type="submit">
+                {!isLoading ? "Create Workspace" : <Loader />}
+              </Button>
             </div>
           </div>
         </form>

@@ -1,3 +1,4 @@
+"use client";
 import React, {
   Dispatch,
   createContext,
@@ -18,7 +19,14 @@ interface AppState {
   workspaces: appWorkspacesType[] | [];
 }
 
-type Action = { type: "ADD_WORKSPACE"; payload: appWorkspacesType };
+type Action =
+  | { type: "ADD_WORKSPACE"; payload: appWorkspacesType }
+  | { type: "DELETE_WORKSPACE"; payload: string }
+  | {
+      type: "UPDATE_WORKSPACE";
+      payload: { workspace: Partial<appWorkspacesType>; workspaceId: string };
+    }
+  | { type: "SET_WORKSPACES"; payload: { workspaces: appWorkspacesType[] } };
 
 const initialState: AppState = { workspaces: [] };
 
@@ -31,6 +39,31 @@ const appReducer = (
       return {
         ...state,
         workspaces: [...state.workspaces, action.payload],
+      };
+    case "DELETE_WORKSPACE":
+      return {
+        ...state,
+        workspaces: state.workspaces.filter(
+          (workspace) => workspace.id !== action.payload,
+        ),
+      };
+    case "UPDATE_WORKSPACE":
+      return {
+        ...state,
+        workspaces: state.workspaces.map((workspace) => {
+          if (workspace.id === action.payload.workspaceId) {
+            return {
+              ...workspace,
+              ...action.payload.workspace,
+            };
+          }
+          return workspace;
+        }),
+      };
+    case "SET_WORKSPACES":
+      return {
+        ...state,
+        workspaces: action.payload.workspaces,
       };
     default:
       return state;
@@ -78,7 +111,7 @@ const AppStateProvider: React.FC<AppStateProviderProps> = ({ children }) => {
       if (urlSegments?.length > 3) {
         return urlSegments[3];
       }
-  }, [pathname]); 
+  }, [pathname]);
 
   return (
     <AppStateContext.Provider
@@ -88,7 +121,6 @@ const AppStateProvider: React.FC<AppStateProviderProps> = ({ children }) => {
     </AppStateContext.Provider>
   );
 };
-
 
 export default AppStateProvider;
 

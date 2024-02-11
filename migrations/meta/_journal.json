@@ -29,6 +29,13 @@
       "when": 1704169088245,
       "tag": "0003_mute_gauntlet",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1707596442264,
+      "tag": "0004_smiling_grandmaster",
+      "breakpoints": true
     }
   ]
 }
