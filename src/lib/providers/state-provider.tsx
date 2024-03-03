@@ -23,10 +23,12 @@ type Action =
   | { type: "ADD_WORKSPACE"; payload: appWorkspacesType }
   | { type: "DELETE_WORKSPACE"; payload: string }
   | {
-      type: "UPDATE_WORKSPACE";
-      payload: { workspace: Partial<appWorkspacesType>; workspaceId: string };
-    }
-  | { type: "SET_WORKSPACES"; payload: { workspaces: appWorkspacesType[] } };
+    type: "UPDATE_WORKSPACE";
+    payload: { workspace: Partial<appWorkspacesType>; workspaceId: string };
+  }
+  | { type: "SET_WORKSPACES"; payload: { workspaces: appWorkspacesType[] } }
+  | { type: "SET_FOLDERS", payload: { workspaceId: string, folders: appFoldersType[] } }
+  | { type: "ADD_FOLDER", payload: { workspaceId: string, folder: appFoldersType } }
 
 const initialState: AppState = { workspaces: [] };
 
@@ -65,6 +67,30 @@ const appReducer = (
         ...state,
         workspaces: action.payload.workspaces,
       };
+    case "SET_FOLDERS":
+      return {
+        ...state,
+        workspaces: state.workspaces.map(workspace => {
+          if (workspace.id === action.payload.workspaceId) {
+            return {
+              ...workspace, folders: action.payload.folders.sort((a, b) => {
+                return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+              })
+            }
+          }
+          return workspace;
+        })
+      }
+    case "ADD_FOLDER":
+      return {
+        ...state,
+        workspaces: state.workspaces.map(workspace => {
+          if (workspace.id === action.payload.workspaceId) {
+            return { ...workspace, folders: [...workspace.folders, action.payload.folder].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()) }
+          }
+          return workspace;
+        })
+      }
     default:
       return state;
   }
@@ -72,12 +98,12 @@ const appReducer = (
 
 const AppStateContext = createContext<
   | {
-      state: AppState;
-      dispatch: Dispatch<Action>;
-      workspaceId: string | undefined;
-      folderId: string | undefined;
-      fileId: string | undefined;
-    }
+    state: AppState;
+    dispatch: Dispatch<Action>;
+    workspaceId: string | undefined;
+    folderId: string | undefined;
+    fileId: string | undefined;
+  }
   | undefined
 >(undefined);
 
@@ -88,6 +114,10 @@ interface AppStateProviderProps {
 const AppStateProvider: React.FC<AppStateProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
   const pathname = usePathname();
+
+  useEffect(() => {
+    console.log("App State Changed", state);
+  }, [state]);
 
   const workspaceId = useMemo(() => {
     const urlSegments = pathname?.split("/").filter(Boolean);

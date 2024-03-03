@@ -36,6 +36,13 @@
       "when": 1707596442264,
       "tag": "0004_smiling_grandmaster",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1709448465865,
+      "tag": "0005_high_boom_boom",
+      "breakpoints": true
     }
   ]
 }
