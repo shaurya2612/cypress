@@ -9,6 +9,7 @@ import TooltipComponent from '../global/tooltip-component';
 import { PlusIcon } from 'lucide-react';
 import { Accordion } from '../ui/accordion';
 import Dropdown from './Dropdown';
+import useSupabaseRealtime from '@/src/lib/hooks/useSupabaseRealtime';
 
 type FoldersDropdownListProps = {
     workspaceFolders: Folder[];
@@ -16,6 +17,7 @@ type FoldersDropdownListProps = {
 }
 
 const FoldersDropdownList: React.FC<FoldersDropdownListProps> = ({ workspaceFolders, workspaceId }) => {
+    useSupabaseRealtime();
     const { state, dispatch, folderId } = useAppState();
     const [folders, setFolders] = useState<Folder[]>(workspaceFolders);
     const { toast } = useToast();
