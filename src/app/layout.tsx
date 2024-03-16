@@ -6,6 +6,7 @@ import ThemeProvider from "../lib/providers/next-theme-provider";
 import { twMerge } from "tailwind-merge";
 import AppStateProvider from "../lib/providers/state-provider";
 import { SupabaseUserProvider } from "../lib/providers/supabase-user-provider";
+import { Toaster } from "../components/ui/toaster";
 
 console.log(db);
 
@@ -26,7 +27,10 @@ export default function RootLayout({
       <body className={twMerge(inter.className, "bg-background")}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <AppStateProvider>
-            <SupabaseUserProvider>{children}</SupabaseUserProvider>
+            <SupabaseUserProvider>
+              {children}
+              <Toaster />
+            </SupabaseUserProvider>
           </AppStateProvider>
         </ThemeProvider>
       </body>

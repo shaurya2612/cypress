@@ -7,6 +7,8 @@ import { v4 } from 'uuid';
 import { useToast } from '../ui/use-toast';
 import TooltipComponent from '../global/tooltip-component';
 import { PlusIcon } from 'lucide-react';
+import { Accordion } from '../ui/accordion';
+import Dropdown from './Dropdown';
 
 type FoldersDropdownListProps = {
     workspaceFolders: Folder[];
@@ -14,7 +16,7 @@ type FoldersDropdownListProps = {
 }
 
 const FoldersDropdownList: React.FC<FoldersDropdownListProps> = ({ workspaceFolders, workspaceId }) => {
-    const { state, dispatch } = useAppState();
+    const { state, dispatch, folderId } = useAppState();
     const [folders, setFolders] = useState<Folder[]>(workspaceFolders);
     const { toast } = useToast();
 
@@ -98,6 +100,23 @@ const FoldersDropdownList: React.FC<FoldersDropdownListProps> = ({ workspaceFold
                     />
                 </TooltipComponent>
             </div>
+            <Accordion
+                type="multiple"
+                defaultValue={[folderId || '']}
+                className="pb-20"
+            >
+                {folders
+                    .filter((folder) => !folder.inTrash)
+                    .map((folder) => (
+                        <Dropdown
+                            key={folder.id}
+                            title={folder.title}
+                            listType="folder"
+                            id={folder.id}
+                            iconId={folder.iconId}
+                        />
+                    ))}
+            </Accordion>
         </>
     )
 }

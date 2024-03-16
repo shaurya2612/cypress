@@ -17,10 +17,10 @@ const EmojiPicker: React.FC<EmojiPickerProps> = ({ children, getValue }) => {
     if (getValue) getValue(selectedEmoji.emoji);
   };
   return (
-    <div className="flex items-center">
+    <div className="flex items-center z-50">
       <Popover>
         <PopoverTrigger className="cursor-pointer">{children}</PopoverTrigger>
-        <PopoverContent className="border-none p-0 text-sm">
+        <PopoverContent className="border-none p-0 text-sm z-50">
           <Picker onEmojiClick={onClick} />
         </PopoverContent>
       </Popover>
