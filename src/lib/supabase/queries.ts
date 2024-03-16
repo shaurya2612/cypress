@@ -145,6 +145,25 @@ export const addCollaborators = async (users:User[], workspaceId:string) => {
 
 }
 
+export const getCollaborators = async (workspaceId: string) => {
+  const response = await db
+    .select()
+    .from(collaborators)
+    .where(eq(collaborators.workspaceId, workspaceId));
+  if (!response.length) return [];
+  const userInformation: Promise<User | undefined>[] = response.map(
+    async (user) => {
+      const exists = await db.query.users.findFirst({
+        where: (u, { eq }) => eq(u.id, user.userId),
+      });
+      return exists;
+    }
+  );
+  const resolvedUsers = await Promise.all(userInformation);
+  return resolvedUsers.filter(Boolean) as User[];
+};
+
+
 export const removeCollaborators = async (
   users: User[],
   workspaceId: string
@@ -224,7 +243,6 @@ export const updateWorkspace = async (workspace: Partial<workspace>, workspaceId
   if(!workspaceId) return;
   try{
     await db.update(workspaces).set(workspace).where(eq(workspaces.id, workspaceId))
-    revalidatePath(`/dashboard/${workspaceId}`)
     return {data: null, error: null}    
   }catch(error){
     console.log(error);
@@ -247,6 +265,13 @@ export const getFiles = async (folderId: string) => {
     console.log(error);
     return { data: null, error: 'Error' };
   }
+};
+
+export const findUser = async (userId: string) => {
+  const response = await db.query.users.findFirst({
+    where: (u, { eq }) => eq(u.id, userId),
+  });
+  return response;
 };
 
 export const getUsersFromSearch = async (email: string) => {

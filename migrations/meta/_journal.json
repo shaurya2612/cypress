@@ -43,6 +43,13 @@
       "when": 1709448465865,
       "tag": "0005_high_boom_boom",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1710589596313,
+      "tag": "0006_organic_power_pack",
+      "breakpoints": true
     }
   ]
 }
