@@ -57,7 +57,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ dirDetails, dirType, fileId }
     const saveTimerRef = useRef<ReturnType<typeof setTimeout>>();
     const [localCursors, setLocalCursors] = useState<any>([]);
 
-    const wrapperRef = useCallback(async (wrapper) => {
+    const wrapperRef = useCallback(async (wrapper: any) => {
         if (typeof window !== "undefined") {
             if (wrapper === null) return;
             wrapper.innerHTML = '';
