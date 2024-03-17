@@ -24,6 +24,7 @@ import { useRouter } from "next/navigation";
 import { useAppState } from "@/src/lib/providers/state-provider";
 import { Button } from "../ui/button";
 import Loader from "../global/Loader";
+import { useSubscriptionModal } from "@/src/lib/providers/subscription-modal-provider";
 
 interface DashboardSetupProps {
   user: AuthUser;
@@ -39,6 +40,8 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
   const { dispatch } = useAppState();
   const [selectedEmoji, setSelectedEmoji] = useState("💼");
   const supabase = createClientComponentClient();
+  const { open, setOpen } = useSubscriptionModal();
+
   const {
     register,
     handleSubmit,
@@ -187,6 +190,11 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
                   required: false,
                 })}
               />
+              {/* {subscription?.status !== 'active' && (
+                <small className="text-muted-foreground">
+                  To customize your workspace, you need to be on a Pro Plan
+                </small>
+              )} */}
               <small className="text-red-600">
                 {errors?.logo?.message?.toString()}
               </small>

@@ -4,6 +4,7 @@ import CypressHomeIcon from "../icons/cypressHomeIcon";
 import CypressTrashIcon from "../icons/cypressTrashIcon";
 import CypressSettingsIcon from "../icons/cypressSettingsIcon";
 import Settings from "../settings/settings";
+import Trash from "../trash/trash";
 
 interface NativeNavigationProps {
     myWorkspaceId: string;
@@ -20,11 +21,11 @@ const NativeNavigation: React.FC<NativeNavigationProps> = ({
                 <li>
                     <Link
                         className="group/native
-            flex
-            text-Neutrals/neutrals-7
-            transition-all
-            gap-2
-          "
+                        flex
+                        text-Neutrals/neutrals-7
+                        transition-all
+                        gap-2
+                    "
                         href={`/dashboard/${myWorkspaceId}`}
                     >
                         <CypressHomeIcon />
@@ -35,33 +36,33 @@ const NativeNavigation: React.FC<NativeNavigationProps> = ({
                 <Settings>
                     <li
                         className="group/native
-            flex
-            text-Neutrals/neutrals-7
-            transition-all
-            gap-2
-            cursor-pointer
-          "
+                        flex
+                        text-Neutrals/neutrals-7
+                        transition-all
+                        gap-2
+                        cursor-pointer
+                    "
                     >
                         <CypressSettingsIcon />
                         <span>Settings</span>
                     </li>
                 </Settings>
-           
 
-                <li>
-                    <Link
-                        className="group/native
-            flex
-            text-Neutrals/neutrals-7
-            transition-all
-            gap-2
-          "
-                        href={`/dashboard/${myWorkspaceId}`}
-                    >
-                        <CypressTrashIcon />
-                        <span>Trash</span>
-                    </Link>
-                </li>
+                <Trash>
+                    <li>
+                        <li
+                            className="group/native
+                        flex
+                        text-Neutrals/neutrals-7
+                        transition-all
+                        gap-2
+                    "
+                        >
+                            <CypressTrashIcon />
+                            <span>Trash</span>
+                        </li>
+                    </li>
+                </Trash>
 
             </ul>
         </nav>

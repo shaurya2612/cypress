@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { addCollaborators, deleteWorkspace, getCollaborators, removeCollaborators, updateWorkspace } from '@/src/lib/supabase/queries';
 import { v4 } from 'uuid';
-import { Briefcase, CreditCard, ExternalLink, Lock, LogOut, Plus, Share, UserIcon } from 'lucide-react';
+import { Briefcase, CreditCard, ExternalLink, Lock, LogOut, Plus, Share, User as UserIcon } from 'lucide-react';
 import { Separator } from '@radix-ui/react-select';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
@@ -22,6 +22,7 @@ import CypressProfileIcon from '../icons/cypressProfileIcon';
 import LogoutButton from '../global/logout-button';
 import Link from 'next/link';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '../ui/alert-dialog';
+import { useSubscriptionModal } from '@/src/lib/providers/subscription-modal-provider';
 
 interface SettingsFormProps {
 
@@ -33,6 +34,7 @@ const SettingsForm: React.FC<SettingsFormProps> = (props) => {
     const { user, subscription } = useSupabaseUser();
     const router = useRouter();
     const supabase = createClientComponentClient();
+    const {open, setOpen} = useSubscriptionModal();
     const { state, workspaceId, dispatch } = useAppState();
     const [permissions, setPermissions] = useState('private');
     const [collaborators, setCollaborators] = useState<User[] | []>([]);
@@ -390,7 +392,7 @@ const SettingsForm: React.FC<SettingsFormProps> = (props) => {
                 >
                     View Plans <ExternalLink size={16} />
                 </Link>
-                {/* {subscription?.status === 'active' ? (
+                {subscription?.status === 'active' ? (
                     <div>
                         <Button
                             type="button"
@@ -398,7 +400,7 @@ const SettingsForm: React.FC<SettingsFormProps> = (props) => {
                             variant={'secondary'}
                             disabled={loadingPortal}
                             className="text-sm"
-                            onClick={redirectToCustomerPortal}
+                            // onClick={redirectToCustomerPortal}
                         >
                             Manage Subscription
                         </Button>
@@ -410,12 +412,12 @@ const SettingsForm: React.FC<SettingsFormProps> = (props) => {
                             size="sm"
                             variant={'secondary'}
                             className="text-sm"
-                            onClick={() => setOpen(true)}
+                            onClick={() => {}}
                         >
                             Start Plan
                         </Button>
                     </div>
-                )} */}
+                )}
             </>
             <AlertDialog open={openAlertMessage}>
                 <AlertDialogContent>
