@@ -1,11 +1,11 @@
-{
+{ 
   "name": "cypress",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --port ${PORT-3000}",
+    "dev": "next dev --hostname=0.0.0.0 --port ${PORT-3000}",
     "build": "next build",
-    "start": "next start --port ${PORT-3000}",
+    "start": "next start --hostname=0.0.0.0 --port ${PORT-3000}",
     "lint": "next lint",
     "push": "drizzle-kit push:pg",
     "pull": "drizzle-kit introspect:pg ",
