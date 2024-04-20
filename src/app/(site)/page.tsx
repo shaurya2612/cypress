@@ -26,6 +26,7 @@ import {
   CardDescription,
   CardTitle,
 } from "@/src/components/ui/card";
+import Link from "next/link";
 const HomePage = () => {
   return (
     <>
@@ -65,8 +66,9 @@ const HomePage = () => {
             p-6
             text-2xl
           "
+          asChild
           >
-            Get Cypress Free
+            <Link href="/login">Get Cypress Free</Link>
           </Button>
         </div>
         <div
